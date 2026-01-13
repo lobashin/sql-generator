@@ -2,3 +2,4 @@
 **/.gradle
 **/.env
 **/.idea
+**/gradle.properties

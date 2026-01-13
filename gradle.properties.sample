@@ -5,3 +5,5 @@ org.gradle.configuration-cache=true
 org.gradle.parallel=true
 org.gradle.caching=true
 
+org.example.executable.docker=docker
+org.example.executable.docker-compose=docker-compose
