@@ -1,0 +1,12 @@
+services:
+  lda-postgres:
+    container_name: pgvector
+    deploy:
+      resources:
+        limits:
+          memory: 1000m
+    env_file:
+      - conf/postgres.env
+    image: pgvector/pgvector:pg17
+    ports:
+      - "5432:5432"
