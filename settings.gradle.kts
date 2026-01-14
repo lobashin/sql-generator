@@ -6,8 +6,19 @@
  * This project uses @Incubating APIs which are subject to change.
  */
 
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        google()
+    }
+    plugins {
+        id("org.springframework.boot") version "3.3.4"
+        id("io.spring.dependency-management") version "1.1.6"
+    }
+}
+
 plugins {
-    // Apply the foojay-resolver plugin to allow automatic download of JDKs
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 

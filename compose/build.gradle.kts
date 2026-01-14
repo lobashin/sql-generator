@@ -4,4 +4,6 @@ plugins {
 
 dockerCompose {
     useComposeFiles.add("postgres.yml")
+    executable.set("/usr/local/bin/docker-compose")
+    dockerExecutable.set("/usr/local/bin/docker")
 }

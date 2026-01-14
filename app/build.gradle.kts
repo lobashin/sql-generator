@@ -7,38 +7,33 @@
  */
 
 plugins {
-    // Apply the application plugin to add support for building a CLI application in Java.
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
     application
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
+    google()  // если нужен
 }
 
 dependencies {
-    // This dependency is used by the application.
-    implementation(libs.guava)
-}
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 
-testing {
-    suites {
-        // Configure the built-in test suite
-        val test by getting(JvmTestSuite::class) {
-            // Use JUnit Jupiter test framework
-            useJUnitJupiter("5.12.1")
-        }
-    }
-}
-
-// Apply a specific Java toolchain to ease working on different environments.
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 application {
-    // Define the main class for the application.
-    mainClass = "org.example.App"
+    mainClass.set("org.example.Application")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
