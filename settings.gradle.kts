@@ -14,3 +14,4 @@ plugins {
 rootProject.name = "sql-generator"
 include("app")
 include("compose")
+include("mcp:sql-generator")
