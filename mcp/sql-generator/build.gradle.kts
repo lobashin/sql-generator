@@ -8,6 +8,7 @@ repositories {
 
 dependencies {
     implementation(libs.guava)
+    implementation(libs.spring.ai.gigachat)
 }
 
 testing {
