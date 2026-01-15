@@ -7,38 +7,45 @@
  */
 
 plugins {
-    // Apply the application plugin to add support for building a CLI application in Java.
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
     application
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
+    google()
 }
 
 dependencies {
-    // This dependency is used by the application.
-    implementation(libs.guava)
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+    // Lombok dependencies
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+    testCompileOnly("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
+
+    // Spring Boot configuration processor
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+    // SpringDoc OpenAPI (Swagger для Spring Boot 3.x)
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-testing {
-    suites {
-        // Configure the built-in test suite
-        val test by getting(JvmTestSuite::class) {
-            // Use JUnit Jupiter test framework
-            useJUnitJupiter("5.12.1")
-        }
-    }
+application {
+    mainClass.set("org.example.Application")
 }
 
-// Apply a specific Java toolchain to ease working on different environments.
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
-}
-
-application {
-    // Define the main class for the application.
-    mainClass = "org.example.App"
 }
