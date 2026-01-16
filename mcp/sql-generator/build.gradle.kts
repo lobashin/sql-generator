@@ -9,7 +9,7 @@ repositories {
 dependencies {
     implementation(libs.guava)
     implementation(libs.spring.ai.gigachat)
-    implementation(libs.spring.ai.core)
+//    implementation(libs.spring.ai.core)
     implementation(libs.spring.ai.vector.store)
 }
 
