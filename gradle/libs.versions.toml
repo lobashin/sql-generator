@@ -4,7 +4,9 @@
 [versions]
 guava = "33.4.6-jre"
 spring-ai-gigachat = "1.1.1"
+spring-ai-core = "0.8.1"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 spring-ai-gigachat = { module = "chat.giga:spring-ai-starter-model-gigachat", version.ref = "spring-ai-gigachat" }
+spring-ai-core = { module = "org.springframework.ai:spring-ai-core", version.ref = "spring-ai-core" }
