@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS document (
     file_size BIGINT,
     mime_type VARCHAR(100),
     uploaded_by uuid REFERENCES person(id),
+    child_id uuid REFERENCES children(id) ON DELETE SET NULL,
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -54,5 +55,6 @@ CREATE TABLE IF NOT EXISTS document (
 CREATE INDEX IF NOT EXISTS idx_person_email ON person(email);
 CREATE INDEX IF NOT EXISTS idx_children_person_id ON children(person_id);
 CREATE INDEX IF NOT EXISTS idx_document_uploaded_by ON document(uploaded_by);
+CREATE INDEX IF NOT EXISTS idx_document_child_id ON document(child_id);
 CREATE INDEX IF NOT EXISTS idx_document_uploaded_at ON document(uploaded_at);
 ```
