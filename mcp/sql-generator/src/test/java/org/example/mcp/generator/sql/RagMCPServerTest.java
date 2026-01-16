@@ -2,15 +2,15 @@ package org.example.mcp.generator.sql;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class RagMCPServerTest {
 
     @Test
     void contextLoads() {
         // Этот тест проверяет, что контекст Spring Boot успешно загружается
-        assertNotNull(RagMCPServer.class, "Класс RagMCPServer должен существовать");
+        // Если контекст не загрузится, тест упадет с исключением
     }
 }
