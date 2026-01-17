@@ -4,3 +4,4 @@
 **/.idea
 **/gradle.properties
 .aider*
+kls_database.db
