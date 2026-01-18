@@ -1,6 +1,6 @@
-package org.example.service;
+package org.example.app.service;
 
 public interface RagService {
 
-    String retrieveAndGenerate(String message);
+    String selectData(String message);
 }
