@@ -1,0 +1,26 @@
+package org.example.mcp.generator.sql;
+
+import chat.giga.springai.GigaChatOptions;
+import chat.giga.springai.api.chat.GigaChatApi;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+
+class ChatClientCreatorImpl implements ChatClientCreator {
+
+	private final ChatClient.Builder chatClientBuilder;
+
+	ChatClientCreatorImpl(ChatClient.Builder chatClientBuilder) {
+		this.chatClientBuilder = chatClientBuilder;
+	}
+
+	@Override
+	public ChatClient create() {
+		return chatClientBuilder
+				.defaultAdvisors(
+						new SimpleLoggerAdvisor())
+				.defaultOptions(GigaChatOptions.builder()
+						.model(GigaChatApi.ChatModel.GIGA_CHAT_2)
+						.build())
+				.build();
+	}
+}
