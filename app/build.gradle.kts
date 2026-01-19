@@ -34,6 +34,14 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    implementation("chat.giga:spring-ai-starter-model-gigachat:1.1.1")
+
+    // Spring Boot Starter JDBC
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+
+    // PostgreSQL драйвер
+    runtimeOnly("org.postgresql:postgresql")
 }
 
 application {

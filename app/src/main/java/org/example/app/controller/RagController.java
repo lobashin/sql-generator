@@ -1,10 +1,10 @@
-package org.example.controller;
+package org.example.app.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.example.dto.MessageRequest;
-import org.example.service.RagService;
+import org.example.app.dto.MessageRequest;
+import org.example.app.service.RagService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +22,6 @@ public class RagController {
     )
     @PostMapping("/ai/rag")
     public String generate(@RequestBody MessageRequest request) {
-        return ragService.retrieveAndGenerate(request.getMessage());
+        return ragService.selectData(request.getMessage());
     }
 }
