@@ -1,6 +1,5 @@
 package org.example.mcp.generator.sql;
 
-import chat.giga.springai.autoconfigure.GigaChatAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

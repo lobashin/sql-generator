@@ -1,11 +1,17 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/vectordb
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
-  
+
   ai:
     vectorstore:
       pgvector:
-        initialize-schema: true  # Критически важно для Spring AI 1.x!
+        initialize-schema: true
+    gigachat:
+      auth:
+        bearer:
+          api-key: ${GIGACHAT_API_KEY}
+        scope: GIGACHAT_API_PERS
+        unsafe-ssl: true
