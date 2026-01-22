@@ -1,4 +1,5 @@
 **/build
+**/bin
 **/.gradle
 **/.env
 **/.idea
@@ -7,5 +8,7 @@
 **/.settings
 **/gradle.properties
 **/application.properties
+**/application.yaml
+**/application.yml
 .aider*
 kls_database.db

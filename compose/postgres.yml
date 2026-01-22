@@ -7,8 +7,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      # создание схемы и таблиц для datamart
       - ./docker/datamart/01-create-table-employee.sql:/docker-entrypoint-initdb.d/01-create-tables.sql
-      # заполнение данными таблиц в datamart
       - ./docker/datamart/02-seed-data.sql:/docker-entrypoint-initdb.d/02-seed-data.sql
+      - ./docker/datamart/03-vector-store.sql:/docker-entrypoint-initdb.d/03-vector-store.sql
     mem_limit: 1000m
