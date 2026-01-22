@@ -38,6 +38,7 @@ public class SqlGeneratorTool {
         );
 
         // Формирование контекста
+        assert relevantDocs != null;
         String context = relevantDocs.stream()
                 .map(Document::getText)
                 .collect(Collectors.joining("\n\n---\n\n"));
