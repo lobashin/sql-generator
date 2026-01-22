@@ -4,7 +4,9 @@ import chat.giga.springai.GigaChatOptions;
 import chat.giga.springai.api.chat.GigaChatApi;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.stereotype.Service;
 
+@Service
 class ChatClientCreatorImpl implements ChatClientCreator {
 
 	private final ChatClient.Builder chatClientBuilder;
