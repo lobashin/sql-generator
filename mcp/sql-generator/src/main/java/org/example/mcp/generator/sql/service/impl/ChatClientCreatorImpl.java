@@ -1,7 +1,8 @@
-package org.example.mcp.generator.sql;
+package org.example.mcp.generator.sql.service.impl;
 
 import chat.giga.springai.GigaChatOptions;
 import chat.giga.springai.api.chat.GigaChatApi;
+import org.example.mcp.generator.sql.service.ChatClientCreator;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.stereotype.Service;

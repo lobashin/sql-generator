@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -69,6 +70,41 @@ public class McpClientImpl implements McpClient {
         } catch (Exception e) {
             log.error("Error calling MCP service for message: {}", message, e);
             return "Error calling MCP service: " + e.getMessage();
+        }
+    }
+
+    public String addDocumentsToKnowledgeBase(List<Map<String, Object>> documents) {
+        log.info("Adding {} documents to knowledge base", documents.size());
+
+        try {
+            String url = UriComponentsBuilder.fromHttpUrl(mcpServiceUrl)
+                    .path("/ai/add-docs")
+                    .build()
+                    .toUriString();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<List<Map<String, Object>>> requestEntity = new HttpEntity<>(documents, headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    requestEntity,
+                    String.class
+            );
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                log.info("Successfully added {} documents to knowledge base", documents.size());
+                return response.getBody();
+            } else {
+                log.error("Failed to add documents. Status: {}", response.getStatusCode());
+                return "Error: HTTP " + response.getStatusCode();
+            }
+
+        } catch (Exception e) {
+            log.error("Error adding documents to knowledge base", e);
+            return "Error adding documents: " + e.getMessage();
         }
     }
 }

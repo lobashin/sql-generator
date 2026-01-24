@@ -1,5 +1,6 @@
 package org.example.app.repository.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.app.exception.UnsupportedSqlCommandException;
 import org.example.app.repository.DataSelectorRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Repository
 public class DataSelectorRepositoryImpl implements DataSelectorRepository {
 
@@ -20,6 +22,7 @@ public class DataSelectorRepositoryImpl implements DataSelectorRepository {
     @Override
     public String findDataFromRepository(String sql) {
         try {
+            log.info(">> Ответ от MCP {}:", sql);
             String trimmedSql = sql.trim().toLowerCase();
             if (trimmedSql.startsWith("select")) {
                 List<Map<String, Object>> result = jdbcTemplate.queryForList(sql);
