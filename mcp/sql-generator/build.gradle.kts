@@ -17,6 +17,12 @@ dependencies {
     implementation("org.springframework.ai:spring-ai-starter-vector-store-pgvector:1.1.2")
     implementation("org.postgresql:postgresql")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+    testCompileOnly("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
