@@ -61,4 +61,37 @@ public class VectorStoreTest {
                 results.getFirst().getText());
 
     }
+
+
+//    @Test
+//    void evaluateRelevancy() {
+//        String question = "Покажи sql для поиска сотрудника с детьми и с идетификатором 4 или 3";
+//
+//        RetrievalAugmentationAdvisor ragAdvisor = RetrievalAugmentationAdvisor.builder()
+//                .documentRetriever(VectorStoreDocumentRetriever.builder()
+//                        .vectorStore(pgVectorStore)
+//                        .build())
+//                .build();
+//
+//        ChatResponse chatResponse = ChatClient.builder(chatModel).build()
+//                .prompt(question)
+//                .advisors(ragAdvisor)
+//                .call()
+//                .chatResponse();
+//
+//        EvaluationRequest evaluationRequest = new EvaluationRequest(
+//                // The original user question
+//                question,
+//                // The retrieved context from the RAG flow
+//                chatResponse.getMetadata().get(RetrievalAugmentationAdvisor.DOCUMENT_CONTEXT),
+//                // The AI model's response
+//                chatResponse.getResult().getOutput().getText()
+//        );
+//
+//        RelevancyEvaluator evaluator = new RelevancyEvaluator(ChatClient.builder(chatModel));
+//
+//        EvaluationResponse evaluationResponse = evaluator.evaluate(evaluationRequest);
+//
+//        assertThat(evaluationResponse.isPass()).isTrue();
+//    }
 }
