@@ -1,0 +1,602 @@
+--- METADATA ---
+title: Схема datamart
+type: schema_overview
+schema: datamart
+category: general
+priority: 1
+
+--- CONTENT ---
+СХЕМА: datamart
+НАЗНАЧЕНИЕ: Хранение данных о сотрудниках и их семьях
+
+--- METADATA ---
+title: Таблицы датамарта
+type: schema_overview
+schema: datamart
+category: general
+priority: 1
+
+--- CONTENT ---
+ТАБЛИЦЫ:
+- datamart.employee
+- datamart.children
+- datamart.documents
+
+--- METADATA ---
+title: Связи таблиц
+type: schema_overview
+schema: datamart
+category: general
+priority: 1
+
+--- CONTENT ---
+СВЯЗИ:
+- employee -> children через employee_id
+- employee -> documents через employee_id
+- children -> documents через child_id
+
+--- METADATA ---
+title: Полные имена таблиц
+type: schema_overview
+schema: datamart
+category: general
+priority: 1
+
+--- CONTENT ---
+ВАЖНО: Всегда используй полные имена таблиц:
+datamart.employee, datamart.children, datamart.documents
+
+--- METADATA ---
+title: Таблица employee
+type: table_info
+schema: datamart
+table: employee
+priority: 2
+
+--- CONTENT ---
+ТАБЛИЦА: datamart.employee
+НАЗНАЧЕНИЕ: Информация о сотрудниках
+
+--- METADATA ---
+title: Поля employee
+type: table_info
+schema: datamart
+table: employee
+priority: 2
+
+--- CONTENT ---
+ПОЛЯ employee:
+- id: SERIAL PRIMARY KEY
+- name: VARCHAR(100) NOT NULL
+- email: VARCHAR(100) UNIQUE NOT NULL
+- department: VARCHAR(50)
+- created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+--- METADATA ---
+title: Комментарии employee
+type: table_info
+schema: datamart
+table: employee
+priority: 2
+
+--- CONTENT ---
+КОММЕНТАРИИ employee:
+- id: Уникальный ID сотрудника
+- name: ФИО сотрудника
+- email: Email сотрудника
+- department: Отдел сотрудника
+- created_at: Дата создания записи
+
+--- METADATA ---
+title: Ограничения employee
+type: table_info
+schema: datamart
+table: employee
+priority: 2
+
+--- CONTENT ---
+ОГРАНИЧЕНИЯ employee:
+- Первичный ключ: id
+- Уникальное: email
+- NOT NULL: name, email
+
+--- METADATA ---
+title: Пример запроса employee
+type: table_info
+schema: datamart
+table: employee
+priority: 2
+
+--- CONTENT ---
+ПРИМЕР ЗАПРОСА employee:
+SELECT * FROM datamart.employee WHERE id = 1;
+
+--- METADATA ---
+title: Таблица children
+type: table_info
+schema: datamart
+table: children
+priority: 2
+
+--- CONTENT ---
+ТАБЛИЦА: datamart.children
+НАЗНАЧЕНИЕ: Информация о детях сотрудников
+
+--- METADATA ---
+title: Поля children
+type: table_info
+schema: datamart
+table: children
+priority: 2
+
+--- CONTENT ---
+ПОЛЯ children:
+- id: SERIAL PRIMARY KEY
+- employee_id: INTEGER NOT NULL
+- name: VARCHAR(100) NOT NULL
+- age: INTEGER
+- birth_date: DATE
+
+--- METADATA ---
+title: Комментарии children
+type: table_info
+schema: datamart
+table: children
+priority: 2
+
+--- CONTENT ---
+КОММЕНТАРИИ children:
+- id: Уникальный ID ребенка
+- employee_id: ID родителя
+- name: ФИО ребенка
+- age: Возраст ребенка
+- birth_date: Дата рождения
+
+--- METADATA ---
+title: Внешние ключи children
+type: table_info
+schema: datamart
+table: children
+priority: 2
+
+--- CONTENT ---
+ВНЕШНИЙ КЛЮЧ children:
+employee_id REFERENCES datamart.employee(id)
+
+--- METADATA ---
+title: Пример запроса children
+type: table_info
+schema: datamart
+table: children
+priority: 2
+
+--- CONTENT ---
+ПРИМЕР ЗАПРОСА children:
+SELECT * FROM datamart.children WHERE employee_id = 1;
+
+--- METADATA ---
+title: Таблица documents
+type: table_info
+schema: datamart
+table: documents
+priority: 2
+
+--- CONTENT ---
+ТАБЛИЦА: datamart.documents
+НАЗНАЧЕНИЕ: Документы сотрудников и детей
+
+--- METADATA ---
+title: Поля documents
+type: table_info
+schema: datamart
+table: documents
+priority: 2
+
+--- CONTENT ---
+ПОЛЯ documents:
+- id: SERIAL PRIMARY KEY
+- employee_id: INTEGER NOT NULL
+- child_id: INTEGER
+- document_type: VARCHAR(50) NOT NULL
+
+--- METADATA ---
+title: Поля documents продолжение
+type: table_info
+schema: datamart
+table: documents
+priority: 2
+
+--- CONTENT ---
+ПОЛЯ documents (продолжение):
+- document_number: VARCHAR(100) UNIQUE NOT NULL
+- issue_date: DATE
+- expiration_date: DATE
+- file_path: TEXT
+
+--- METADATA ---
+title: Комментарии documents
+type: table_info
+schema: datamart
+table: documents
+priority: 2
+
+--- CONTENT ---
+КОММЕНТАРИИ documents:
+- id: Уникальный ID документа
+- employee_id: ID сотрудника
+- child_id: ID ребенка (если детский)
+- document_type: Тип документа
+
+--- METADATA ---
+title: Комментарии documents продолжение
+type: table_info
+schema: datamart
+table: documents
+priority: 2
+
+--- CONTENT ---
+КОММЕНТАРИИ documents (продолжение):
+- document_number: Номер документа
+- issue_date: Дата выдачи
+- expiration_date: Срок действия
+- file_path: Путь к файлу
+
+--- METADATA ---
+title: Внешние ключи documents
+type: table_info
+schema: datamart
+table: documents
+priority: 2
+
+--- CONTENT ---
+ВНЕШНИЕ КЛЮЧИ documents:
+- employee_id REFERENCES datamart.employee(id)
+- child_id REFERENCES datamart.children(id)
+
+--- METADATA ---
+title: Пример запроса documents
+type: table_info
+schema: datamart
+table: documents
+priority: 2
+
+--- CONTENT ---
+ПРИМЕР ЗАПРОСА documents:
+SELECT * FROM datamart.documents WHERE employee_id = 1;
+
+--- METADATA ---
+title: Связи между таблицами
+type: relationships
+schema: datamart
+category: joins
+priority: 3
+
+--- CONTENT ---
+ОСНОВНЫЕ СВЯЗИ:
+1. datamart.employee.id = datamart.children.employee_id
+2. datamart.employee.id = datamart.documents.employee_id
+3. datamart.children.id = datamart.documents.child_id
+
+--- METADATA ---
+title: JOIN сотрудники и дети
+type: relationships
+schema: datamart
+category: joins
+priority: 3
+
+--- CONTENT ---
+JOIN: СОТРУДНИКИ И ДЕТИ
+SELECT datamart.employee.name, datamart.children.name
+FROM datamart.employee
+JOIN datamart.children ON datamart.employee.id = datamart.children.employee_id
+
+--- METADATA ---
+title: JOIN все сотрудники и дети
+type: relationships
+schema: datamart
+category: joins
+priority: 3
+
+--- CONTENT ---
+JOIN: ВСЕ СОТРУДНИКИ И ДЕТИ
+SELECT datamart.employee.name, datamart.children.name
+FROM datamart.employee
+LEFT JOIN datamart.children ON datamart.employee.id = datamart.children.employee_id
+
+--- METADATA ---
+title: JOIN сотрудники и документы
+type: relationships
+schema: datamart
+category: joins
+priority: 3
+
+--- CONTENT ---
+JOIN: СОТРУДНИКИ И ДОКУМЕНТЫ
+SELECT datamart.employee.name, datamart.documents.document_type
+FROM datamart.employee
+JOIN datamart.documents ON datamart.employee.id = datamart.documents.employee_id
+
+--- METADATA ---
+title: JOIN дети и документы
+type: relationships
+schema: datamart
+category: joins
+priority: 3
+
+--- CONTENT ---
+JOIN: ДЕТИ И ДОКУМЕНТЫ
+SELECT datamart.children.name, datamart.documents.document_type
+FROM datamart.children
+JOIN datamart.documents ON datamart.children.id = datamart.documents.child_id
+
+--- METADATA ---
+title: Поиск сотрудника по ID
+type: query_patterns
+schema: datamart
+category: templates
+priority: 3
+
+--- CONTENT ---
+ПОИСК СОТРУДНИКА ПО ID:
+SELECT * FROM datamart.employee WHERE id = 1;
+
+--- METADATA ---
+title: Поиск сотрудника по email
+type: query_patterns
+schema: datamart
+category: templates
+priority: 3
+
+--- CONTENT ---
+ПОИСК СОТРУДНИКА ПО EMAIL:
+SELECT * FROM datamart.employee WHERE email = 'example@company.com';
+
+--- METADATA ---
+title: Поиск детей сотрудника
+type: query_patterns
+schema: datamart
+category: templates
+priority: 3
+
+--- CONTENT ---
+ПОИСК ДЕТЕЙ СОТРУДНИКА:
+SELECT * FROM datamart.children WHERE employee_id = 1;
+
+--- METADATA ---
+title: Поиск документов сотрудника
+type: query_patterns
+schema: datamart
+category: templates
+priority: 3
+
+--- CONTENT ---
+ПОИСК ДОКУМЕНТОВ СОТРУДНИКА:
+SELECT * FROM datamart.documents WHERE employee_id = 1 AND child_id IS NULL;
+
+--- METADATA ---
+title: Поиск документов ребенка
+type: query_patterns
+schema: datamart
+category: templates
+priority: 3
+
+--- CONTENT ---
+ПОИСК ДОКУМЕНТОВ РЕБЕНКА:
+SELECT * FROM datamart.documents WHERE child_id = 5;
+
+--- METADATA ---
+title: Количество детей у сотрудников
+type: query_patterns
+schema: datamart
+category: templates
+priority: 3
+
+--- CONTENT ---
+КОЛИЧЕСТВО ДЕТЕЙ У СОТРУДНИКОВ:
+SELECT datamart.employee.name, COUNT(datamart.children.id)
+FROM datamart.employee
+LEFT JOIN datamart.children ON datamart.employee.id = datamart.children.employee_id
+GROUP BY datamart.employee.name
+
+--- METADATA ---
+title: Сотрудники без детей
+type: query_patterns
+schema: datamart
+category: templates
+priority: 3
+
+--- CONTENT ---
+СОТРУДНИКИ БЕЗ ДЕТЕЙ:
+SELECT datamart.employee.id, datamart.employee.name
+FROM datamart.employee
+LEFT JOIN datamart.children ON datamart.employee.id = datamart.children.employee_id
+WHERE datamart.children.id IS NULL
+
+--- METADATA ---
+title: Просроченные документы
+type: query_patterns
+schema: datamart
+category: templates
+priority: 3
+
+--- CONTENT ---
+ПРОСРОЧЕННЫЕ ДОКУМЕНТЫ:
+SELECT datamart.employee.name, datamart.documents.document_number
+FROM datamart.documents
+JOIN datamart.employee ON datamart.documents.employee_id = datamart.employee.id
+WHERE datamart.documents.expiration_date < CURRENT_DATE
+
+--- METADATA ---
+title: Правила WHERE
+type: query_patterns
+schema: datamart
+category: templates
+priority: 3
+
+--- CONTENT ---
+ПРАВИЛА WHERE:
+- Для одного значения: WHERE id = значение
+- Для нескольких значений: WHERE id IN (1, 2, 3)
+- Для NULL: WHERE child_id IS NULL
+- Для NOT NULL: WHERE child_id IS NOT NULL
+
+--- METADATA ---
+title: Полные имена таблиц правило
+type: naming_conventions
+schema: datamart
+category: rules
+priority: 3
+
+--- CONTENT ---
+ПРАВИЛО: Всегда используй полные имена таблиц:
+datamart.employee, datamart.children, datamart.documents
+
+--- METADATA ---
+title: Правильные имена полей
+type: naming_conventions
+schema: datamart
+category: rules
+priority: 3
+
+--- CONTENT ---
+ПРАВИЛЬНЫЕ ИМЕНА ПОЛЕЙ:
+- id - первичный ключ
+- name - ФИО
+- email - электронная почта
+- employee_id - внешний ключ
+
+--- METADATA ---
+title: Суффиксы полей
+type: naming_conventions
+schema: datamart
+category: rules
+priority: 3
+
+--- CONTENT ---
+СУФФИКСЫ ПОЛЕЙ:
+- _date - для дат (birth_date, issue_date)
+- _at - для временных меток (created_at)
+- _id - для идентификаторов (employee_id, child_id)
+
+--- METADATA ---
+title: Запрещенные названия таблиц
+type: naming_conventions
+schema: datamart
+category: rules
+priority: 3
+
+--- CONTENT ---
+НЕ ИСПОЛЬЗУЙ ЭТИ НАЗВАНИЯ:
+- staff, users вместо employee
+- kids, childs вместо children
+- docs, files вместо documents
+
+--- METADATA ---
+title: Запрещенные названия полей
+type: naming_conventions
+schema: datamart
+category: rules
+priority: 3
+
+--- CONTENT ---
+НЕ ИСПОЛЬЗУЙ ЭТИ НАЗВАНИЯ ПОЛЕЙ:
+- full_name, fio вместо name
+- user_id вместо employee_id
+- kid_id вместо child_id
+
+--- METADATA ---
+title: Правило без алиасов
+type: naming_conventions
+schema: datamart
+category: rules
+priority: 3
+
+--- CONTENT ---
+ВАЖНОЕ ПРАВИЛО:
+Никогда не используй алиасы (AS) в запросах.
+Всегда используй полные имена полей.
+
+--- METADATA ---
+title: Пример: сотрудники IT отдела
+type: examples
+schema: datamart
+category: practical
+priority: 3
+
+--- CONTENT ---
+ПРИМЕР: СОТРУДНИКИ IT ОТДЕЛА С ДЕТЬМИ
+SELECT datamart.employee.name, datamart.employee.department
+FROM datamart.employee
+LEFT JOIN datamart.children ON datamart.employee.id = datamart.children.employee_id
+WHERE datamart.employee.department = 'IT'
+
+--- METADATA ---
+title: Пример: паспорта сотрудников
+type: examples
+schema: datamart
+category: practical
+priority: 3
+
+--- CONTENT ---
+ПРИМЕР: ПАСПОРТА СОТРУДНИКОВ
+SELECT datamart.employee.name, datamart.documents.document_number
+FROM datamart.employee
+JOIN datamart.documents ON datamart.employee.id = datamart.documents.employee_id
+WHERE datamart.documents.document_type = 'паспорт'
+
+--- METADATA ---
+title: Пример: свидетельства о рождении
+type: examples
+schema: datamart
+category: practical
+priority: 3
+
+--- CONTENT ---
+ПРИМЕР: СВИДЕТЕЛЬСТВА О РОЖДЕНИИ
+SELECT datamart.children.name, datamart.documents.document_number
+FROM datamart.children
+JOIN datamart.documents ON datamart.children.id = datamart.documents.child_id
+WHERE datamart.documents.document_type = 'свидетельство о рождении'
+
+--- METADATA ---
+title: Пример: сотрудники с детьми
+type: examples
+schema: datamart
+category: practical
+priority: 3
+
+--- CONTENT ---
+ПРИМЕР: СОТРУДНИКИ С БОЛЕЕ 2 ДЕТЬМИ
+SELECT datamart.employee.name, COUNT(datamart.children.id)
+FROM datamart.employee
+JOIN datamart.children ON datamart.employee.id = datamart.children.employee_id
+GROUP BY datamart.employee.name
+HAVING COUNT(datamart.children.id) > 2
+
+--- METADATA ---
+title: Пример: просроченные документы детально
+type: examples
+schema: datamart
+category: practical
+priority: 3
+
+--- CONTENT ---
+ПРИМЕР: ПРОСРОЧЕННЫЕ ДОКУМЕНТЫ
+SELECT datamart.employee.name, datamart.documents.document_type
+FROM datamart.documents
+JOIN datamart.employee ON datamart.documents.employee_id = datamart.employee.id
+WHERE datamart.documents.expiration_date < CURRENT_DATE
+
+--- METADATA ---
+title: Функции SQL
+type: examples
+schema: datamart
+category: practical
+priority: 3
+
+--- CONTENT ---
+КЛЮЧЕВЫЕ ФУНКЦИИ SQL:
+- COUNT() - подсчет записей
+- GROUP BY - группировка
+- HAVING - фильтрация групп
+- CURRENT_DATE - текущая дата

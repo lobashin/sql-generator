@@ -3,8 +3,10 @@ package org.example.mcp.generator.sql.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.example.mcp.generator.sql.SqlGeneratorTool;
+import org.example.mcp.generator.sql.generator.SqlGeneratorTool;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,21 +38,17 @@ public class McpController {
     }
 
     @Operation(
-            summary = "Добавить документ",
-            description = "Добавляет документ в базу знаний"
+            summary = "Добавить документы",
+            description = "Добавляет несколько документов в базу знаний"
     )
-    @PostMapping("/ai/add-doc")
-    public String addDocument(@RequestBody Map<String, Object> request) {
-        String content = (String) request.get("content");
-        @SuppressWarnings("unchecked")
-        Map<String, Object> metadata = (Map<String, Object>) request.get("metadata");
-
-        if (content == null || content.trim().isEmpty()) {
-            return "Error: Content parameter is required";
+    @PostMapping("/ai/add-docs")
+    public String addDocuments(@RequestBody List<Map<String, Object>> documents) {
+        if (documents == null || documents.isEmpty()) {
+            return "Error: Documents list is empty";
         }
 
         try {
-            return sqlGeneratorTool.addToKnowledgeBase(content, metadata);
+            return sqlGeneratorTool.addToKnowledgeBase(documents);
         } catch (Exception e) {
             return "Error: " + e.getMessage();
         }
