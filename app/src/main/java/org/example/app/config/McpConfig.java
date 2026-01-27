@@ -9,12 +9,17 @@ import org.springframework.core.io.Resource;
 @Configuration
 public class McpConfig {
 
-    // 1. Основная структура БД
     @Bean("datamartStructureFile")
-    @Qualifier("datamartStructureFile")
     public Resource datamartStructureFile() {
         return new ClassPathResource(
                 "vector-store-info/mcp-init-with-datamart-structure.txt"
+        );
+    }
+
+    @Bean("suitableServicesFile")
+    public Resource suitableServicesFile() {
+        return new ClassPathResource(
+                "vector-store-info/suitable-services.txt"
         );
     }
 }

@@ -25,6 +25,9 @@ public class RagController {
     private final VectorStoreInitializerFactory vectorStoreInitializerFactory;
     @Qualifier("datamartStructureFile")
     private final Resource datamartStructureFile;
+    @Qualifier("suitableServicesFile")
+    private final Resource suitableServicesFile;
+
 
 
     @Operation(
@@ -54,6 +57,25 @@ public class RagController {
         } catch (Exception e) {
             log.error("Ошибка инициализации датамарта", e);
             return "ERROR: " + e.getMessage();
+        }
+    }
+
+    @Operation(
+            summary = "Инициализация датамарта",
+            description = "Загружает структуру датамарта в векторное хранилище"
+    )
+    @GetMapping("/ai/rag/initialServices")
+    public void initServices() {
+        try {
+            VectorStoreInitializer structureInitializer = vectorStoreInitializerFactory.createInitializer(
+                    suitableServicesFile,
+                    "service_structure_category",
+                    "service_structure_type"
+            );
+            structureInitializer.initializeFromFile();
+            log.info("Инициализация предложенных сервисов завершена успешно");
+        } catch (Exception e) {
+            log.error("Ошибка инициализации предложенных сервисов", e);
         }
     }
 }
