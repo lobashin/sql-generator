@@ -37,7 +37,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("org.example.Application")
+    mainClass.set("org.example.app.Application")
 }
 
 tasks.withType<Test> {
