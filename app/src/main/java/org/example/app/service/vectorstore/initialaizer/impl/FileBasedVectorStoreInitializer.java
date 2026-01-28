@@ -98,32 +98,43 @@ public class FileBasedVectorStoreInitializer implements VectorStoreInitializer {
             String content, String filename) {
 
         List<DocumentInfo> documents = new ArrayList<>();
+        
+        // Если контент пустой, возвращаем пустой список
+        if (content == null || content.trim().isEmpty()) {
+            return documents;
+        }
+
         String[] lines = content.split("\n");
 
         StringBuilder currentContent = new StringBuilder();
-        boolean inMetadata = false;
         StringBuilder metadataContent = new StringBuilder();
+        boolean inMetadata = false;
+        boolean metadataProcessed = false;
 
         for (String line : lines) {
-            if (line.trim().equals("--- METADATA ---")) {
-                inMetadata = true;
-                continue;
-            }
-
-            if (line.trim().equals("--- CONTENT ---")) {
-                // Сохраняем предыдущий документ, если есть
-                if (!currentContent.isEmpty()) {
+            String trimmedLine = line.trim();
+            
+            if (trimmedLine.equals("--- METADATA ---")) {
+                // Если у нас уже есть накопленный контент (предыдущий документ), сохраняем его
+                if (currentContent.length() > 0 || metadataContent.length() > 0) {
                     documents.add(createDocumentInfo(
                             currentContent.toString().trim(),
                             metadataContent.toString(),
                             filename
                     ));
+                    currentContent = new StringBuilder();
+                    metadataContent = new StringBuilder();
                 }
+                
+                inMetadata = true;
+                metadataProcessed = false;
+                continue;
+            }
 
-                // Сбрасываем для нового документа
-                currentContent = new StringBuilder();
-                metadataContent = new StringBuilder();
+            if (trimmedLine.equals("--- CONTENT ---")) {
+                // Переключаемся на контент
                 inMetadata = false;
+                metadataProcessed = true;
                 continue;
             }
 
@@ -134,8 +145,8 @@ public class FileBasedVectorStoreInitializer implements VectorStoreInitializer {
             }
         }
 
-        // Добавляем последний документ
-        if (!currentContent.isEmpty()) {
+        // Обрабатываем последний документ
+        if (currentContent.length() > 0 || metadataContent.length() > 0) {
             documents.add(createDocumentInfo(
                     currentContent.toString().trim(),
                     metadataContent.toString(),
