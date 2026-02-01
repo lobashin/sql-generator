@@ -78,6 +78,7 @@ public class McpClientImpl implements McpClient {
             var response = mcpSyncClients
                     .getFirst()
                     .callTool(McpSchema.CallToolRequest.builder()
+                            .name("add_to_knowledge_base")
                             .arguments(Map.of("documents", ModelOptionsUtils.toJsonString(documents)))
                             .build());
             return response.content().stream().map(Object::toString).collect(Collectors.joining("\n---\n"));
