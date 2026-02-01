@@ -1,9 +1,7 @@
-package org.example.app.service.vectorstore;
+package org.example.app.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.app.restclient.McpClient;
-import org.example.app.service.vectorstore.initialaizer.VectorStoreInitializer;
-import org.example.app.service.vectorstore.initialaizer.impl.FileBasedVectorStoreInitializer;
+import org.example.app.service.impl.FileBasedVectorStoreInitializer;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 

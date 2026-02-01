@@ -10,30 +10,22 @@ repositories {
 }
 
 dependencies {
+    implementation(libs.spring.ai.gigachat)
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-
-    // Lombok dependencies
-    compileOnly("org.projectlombok:lombok")
-    annotationProcessor("org.projectlombok:lombok")
-    testCompileOnly("org.projectlombok:lombok")
-    testAnnotationProcessor("org.projectlombok:lombok")
-
-    // Spring Boot configuration processor
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-
-    // SpringDoc OpenAPI (Swagger для Spring Boot 3.x)
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+    implementation("chat.giga:spring-ai-starter-model-gigachat:1.1.1")
+    implementation("org.springframework.ai:spring-ai-starter-mcp-client:1.1.1")
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("org.projectlombok:lombok")
+    implementation("org.postgresql:postgresql")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-    implementation("chat.giga:spring-ai-starter-model-gigachat:1.1.1")
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
 
-    // Spring Boot Starter JDBC
-    implementation("org.springframework.boot:spring-boot-starter-jdbc")
 
-    // PostgreSQL драйвер
-    runtimeOnly("org.postgresql:postgresql")
 }
 
 application {

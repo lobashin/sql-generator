@@ -1,6 +1,6 @@
-package org.example.mcp.sql.config;
+package org.example.app.config;
 
-import org.example.mcp.sql.service.ChatClientCreator;
+import org.example.app.service.ChatClientCreator;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

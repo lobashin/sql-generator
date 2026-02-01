@@ -1,9 +1,10 @@
 package org.example.mcp.sql.generator;
 
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springaicommunity.mcp.annotation.McpTool;
 import org.springaicommunity.mcp.annotation.McpToolParam;
-import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -16,15 +17,16 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Component
 public class SqlGeneratorTool {
 
-    @Autowired
-    private VectorStore vectorStore;
+    public static final Logger log = LoggerFactory.getLogger(SqlGeneratorTool.class);
 
-    @Autowired
-    private ChatClient chatClient;
+    private final VectorStore vectorStore;
+
+    public SqlGeneratorTool(VectorStore vectorStore) {
+        this.vectorStore = vectorStore;
+    }
 
     @McpTool(
             name = "query_knowledge_base",
@@ -53,33 +55,7 @@ public class SqlGeneratorTool {
         log.info(">> Найдено {} релевантных документов", relevantDocs.size());
         log.info(">> Контекст: {}", context);
 
-        return chatClient.prompt()
-                .system("""
-                        Ты - SQL консультант с доступом к базе знаний о структуре базы данных.
-                        Твоя задача - генерировать SQL запросы на основе предоставленного контекста.
-                        Ты можешь генерировать запросы только с теми именами колонок, таблиц и схем которые я передаю в контексте. 
-                        
-                        Инструкции:
-                        1. Анализируй контекст, чтобы понять структуру базы данных
-                        2. Генерируй ТОЛЬКО SQL запрос без пояснений
-                        3. Используй правильные имена таблиц и полей из контекста
-                        4. Все таблицы находятся в схеме "datamart"
-                        5. Если запрос сложный, используй JOIN и WHERE правильно
-                        6. Если информации недостаточно, верни "Для правильного доступа к данным не достаточно информации"
-                        7. Все таблицы и колонки содержатся в контексте который я предоставляю
-                        8. Не используй никакую дополнительную информацию кроме той которую я передаю в контексте
-                        9. Все таблицы которые ты используешь в итоговом sql запросе, находятся в контексте который я передаю
-                        Контекст базы данных:
-                        {context}
-                        
-                        Правила:
-                        - Всегда используй полные имена таблиц: схемма.таблица
-                        - Для поиска по ID используй WHERE
-                        """)
-                .user("Сгенерируй SQL запрос для: " + question + "\n\nВерни ТОЛЬКО SQL запрос без дополнительного текста.")
-                .advisors(advisor -> advisor.param("context", context))
-                .call()
-                .content();
+        return context;
     }
 
     @McpTool(

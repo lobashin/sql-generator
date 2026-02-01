@@ -1,4 +1,4 @@
-package org.example.mcp.generator.sql;
+package org.example.mcp.sql;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

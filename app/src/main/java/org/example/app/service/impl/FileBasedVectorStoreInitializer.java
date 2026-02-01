@@ -1,9 +1,9 @@
-package org.example.app.service.vectorstore.initialaizer.impl;
+package org.example.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.app.model.DocumentInfo;
-import org.example.app.restclient.McpClient;
-import org.example.app.service.vectorstore.initialaizer.VectorStoreInitializer;
+import org.example.app.service.McpClient;
+import org.example.app.service.VectorStoreInitializer;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 

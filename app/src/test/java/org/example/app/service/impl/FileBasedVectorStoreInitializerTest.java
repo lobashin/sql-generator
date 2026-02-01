@@ -1,6 +1,6 @@
-package org.example.app.service.vectorstore.initialaizer.impl;
+package org.example.app.service.impl;
 
-import org.example.app.restclient.McpClient;
+import org.example.app.service.McpClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
