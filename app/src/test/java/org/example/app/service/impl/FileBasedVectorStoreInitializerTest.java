@@ -8,6 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 
@@ -23,6 +24,9 @@ class FileBasedVectorStoreInitializerTest {
 
     @Mock
     private McpClient mcpClient;
+
+    @Mock
+    private VectorStore vectorStore;
 
     @Captor
     private ArgumentCaptor<List<Map<String, Object>>> documentsCaptor;
@@ -46,7 +50,7 @@ class FileBasedVectorStoreInitializerTest {
         when(nonExistentResource.getFilename()).thenReturn("non-existent.txt");
 
         initializer = new FileBasedVectorStoreInitializer(
-                mcpClient, nonExistentResource, category, initializerType);
+                nonExistentResource, category, initializerType, vectorStore);
 
         // Act
         initializer.initializeFromFile();

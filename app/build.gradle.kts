@@ -11,11 +11,13 @@ repositories {
 
 dependencies {
     implementation(libs.spring.ai.gigachat)
+    implementation(libs.spring.ai.vector.store)
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
     implementation("chat.giga:spring-ai-starter-model-gigachat:1.1.1")
     implementation("org.springframework.ai:spring-ai-starter-mcp-client:1.1.1")
+    implementation("org.springframework.ai:spring-ai-starter-vector-store-pgvector:1.1.2")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.projectlombok:lombok")
     implementation("org.postgresql:postgresql")

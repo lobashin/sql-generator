@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.app.model.DocumentInfo;
 import org.example.app.service.McpClient;
 import org.example.app.service.VectorStoreInitializer;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 
@@ -18,17 +20,17 @@ import java.util.Map;
 @Slf4j
 public class FileBasedVectorStoreInitializer implements VectorStoreInitializer {
 
-    private final McpClient mcpClient;
+    private final VectorStore vectorStore;
     private final Resource file;
     private final String category;
     private final String initializerType;
 
     public FileBasedVectorStoreInitializer(
-            McpClient mcpClient,
             Resource file,
             String category,
-            String initializerType) {
-        this.mcpClient = mcpClient;
+            String initializerType,
+            VectorStore vectorStore) {
+        this.vectorStore = vectorStore;
         this.file = file;
         this.category = category;
         this.initializerType = initializerType;
@@ -45,9 +47,8 @@ public class FileBasedVectorStoreInitializer implements VectorStoreInitializer {
                 return;
             }
 
-            String content = readFileContent(file);
             List<DocumentInfo> documents =
-                    parseDocumentInfos(content, file.getFilename());
+                    parseDocumentInfos(readFileContent(file), file.getFilename());
 
             log.info("[{}] Найдено {} документов для добавления",
                     initializerType, documents.size());
@@ -56,7 +57,30 @@ public class FileBasedVectorStoreInitializer implements VectorStoreInitializer {
             List<Map<String, Object>> documentsToSend = prepareDocumentsForSending(documents);
 
             // Отправляем все документы одним пакетом
-            mcpClient.addDocumentsToKnowledgeBase(documentsToSend);
+            List<Document> aiDocuments = new ArrayList<>();
+
+            for (Map<String, Object> doc : documentsToSend) {
+                String content = (String) doc.get("content");
+                @SuppressWarnings("unchecked")
+                Map<String, Object> metadata = (Map<String, Object>) doc.get("metadata");
+
+                if (content == null || content.trim().isEmpty()) {
+                    continue;
+                }
+
+                Document aiDocument =
+                        new Document(content, metadata);
+                aiDocuments.add(aiDocument);
+            }
+
+            if (!aiDocuments.isEmpty()) {
+                vectorStore.add(aiDocuments);
+                log.info(String.format("Успешно добавлено %d документов в базу знаний", aiDocuments.size()));
+            } else {
+                log.error("Error: No valid documents to add");
+            }
+
+
         } catch (Exception e) {
             log.error("Критическая ошибка инициализации {}: {}",
                     initializerType, e.getMessage(), e);

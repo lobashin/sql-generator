@@ -29,8 +29,7 @@ public class SqlGeneratorTool {
             name = "structure_database",
             description = "Получить описание структуры базы данных"
     )
-    public String structureDatabase() {
-        var question = "Структура базы";
+    public String structureDatabase(@McpToolParam(description = "Поисковый запрос") String question) {
         List<Document> relevantDocs = vectorStore.similaritySearch(
                 SearchRequest.builder()
                         .query(question)
@@ -44,7 +43,7 @@ public class SqlGeneratorTool {
                 .map(Document::getText)
                 .collect(Collectors.joining("\n\n---\n\n"));
 
-        log.info(">> поисковый запрос: {}", question);
+        log.info(">> Получить описание структуры базы данных: {}", question);
         log.info(">> Найдено {} релевантных документов", relevantDocs.size());
         log.info(">> Контекст: {}", context);
 
@@ -56,7 +55,7 @@ public class SqlGeneratorTool {
             description = "Описание конктертной таблицы"
     )
     public String tableDatabase(
-            @McpToolParam(description = "Наименование на русском") String question) {
+            @McpToolParam(description = "Поисковый запрос") String question) {
 
         List<Document> relevantDocs = vectorStore.similaritySearch(
                 SearchRequest.builder()
@@ -71,46 +70,11 @@ public class SqlGeneratorTool {
                 .map(Document::getText)
                 .collect(Collectors.joining("\n\n---\n\n"));
 
-        log.info(">> Запрос пользователя: {}", question);
+        log.info(">> Описание конктертной таблицы: {}", question);
         log.info(">> Найдено {} релевантных документов", relevantDocs.size());
         log.info(">> Контекст: {}", context);
 
         return context;
-    }
-
-//    @McpTool(
-//            name = "add_to_knowledge_base",
-//            description = "Добавляет новые документы в базу знаний"
-//    )
-    public String addToKnowledgeBase(
-            @McpToolParam(description = "Список документов") List<Map<String, Object>> documents) {
-
-        if (documents == null || documents.isEmpty()) {
-            return "Error: Documents list is empty";
-        }
-
-        List<Document> aiDocuments = new ArrayList<>();
-
-        for (Map<String, Object> doc : documents) {
-            String content = (String) doc.get("content");
-            @SuppressWarnings("unchecked")
-            Map<String, Object> metadata = (Map<String, Object>) doc.get("metadata");
-
-            if (content == null || content.trim().isEmpty()) {
-                continue;
-            }
-
-            Document aiDocument =
-                    new Document(content, metadata);
-            aiDocuments.add(aiDocument);
-        }
-
-        if (!aiDocuments.isEmpty()) {
-            vectorStore.add(aiDocuments);
-            return String.format("Успешно добавлено %d документов в базу знаний", aiDocuments.size());
-        } else {
-            return "Error: No valid documents to add";
-        }
     }
 
 }

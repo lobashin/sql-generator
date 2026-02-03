@@ -29,6 +29,9 @@ spring:
     password: postgres
     driver-class-name: org.postgresql.Driver
   ai:
+    vectorstore:
+      pgvector:
+        initialize-schema: true
     gigachat:
       auth:
         bearer:
