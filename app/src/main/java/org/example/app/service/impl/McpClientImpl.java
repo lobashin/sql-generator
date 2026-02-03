@@ -25,16 +25,13 @@ public class McpClientImpl implements McpClient {
 
     public static final Logger log = LoggerFactory.getLogger(McpClientImpl.class);
 
-    private final RestTemplate restTemplate;
     private final ChatClient chatClient;
     private final ToolCallbackProvider tools;
     private final List<McpSyncClient> mcpSyncClients;
 
-    public McpClientImpl(RestTemplate restTemplate,
-                         ChatClient chatClient,
+    public McpClientImpl(ChatClient chatClient,
                          ToolCallbackProvider tools,
                          List<McpSyncClient> mcpSyncClients) {
-        this.restTemplate = restTemplate;
         this.chatClient = chatClient;
         this.tools = tools;
         this.mcpSyncClients = mcpSyncClients;
@@ -42,31 +39,27 @@ public class McpClientImpl implements McpClient {
 
     @Override
     public String requestResolveSql(String message) {
-        log.info("Requesting SQL resolution for message: {}", message);
 
-        return chatClient.prompt().system("""
-                        Ты - SQL консультант с доступом к базе знаний о структуре базы данных.
-                        Твоя задача - генерировать SQL запросы на основе предоставленного контекста.
-                        Ты можешь генерировать запросы только с теми именами колонок, таблиц и схем которые я передаю в контексте. 
-                        
-                        Инструкции:
-                        1. Анализируй контекст, чтобы понять структуру базы данных
+        return chatClient
+                .prompt()
+                .system("""
+                        Ты - SQL консультант.
+                        Твоя задача - генерировать SQL запросы.
+
+                        Сначала используй [Получить описание структуры базы данных] для получения данных о sql, затем примени [Описание конктертной таблицы] для анализа этих данных"*
+
+
+                        1. Анализируй описание структуры базы данных
                         2. Генерируй ТОЛЬКО SQL запрос без пояснений
-                        3. Используй правильные имена таблиц и полей из контекста
-                        4. Все таблицы находятся в схеме "datamart"
-                        5. Если запрос сложный, используй JOIN и WHERE правильно
-                        6. Если информации недостаточно, верни "Для правильного доступа к данным не достаточно информации"
-                        7. Все таблицы и колонки содержатся в контексте который я предоставляю
-                        8. Не используй никакую дополнительную информацию кроме той которую я передаю в контексте
-                        9. Все таблицы которые ты используешь в итоговом sql запросе, находятся в контексте который я передаю
-                        Контекст базы данных:
-                        {context}
-                        
-                        Правила:
-                        - Всегда используй полные имена таблиц: схемма.таблица
-                        - Для поиска по ID используй WHERE
-                        """).user("Сгенерируй SQL запрос для: " + message + "\n\nВерни ТОЛЬКО SQL запрос без дополнительного текста.")
-                .toolCallbacks(Arrays.stream(tools.getToolCallbacks()).toList().stream().filter(toolCallback -> "query_knowledge_base".equals(toolCallback.getToolDefinition().name())).toList())
+                        3. Используй правильные имена таблиц и полей из описания структуры базы данных
+                        4. Используй правильные имена столбцов из описание конктертной таблицы
+                        """)
+                .user("Сгенерируй SQL запрос для: " + message
+                        + "\n\nВерни ТОЛЬКО SQL запрос без дополнительного текста.")
+                .toolCallbacks(tools.getToolCallbacks()
+
+                        )
+                .toolNames()
                 .call()
                 .content();
     }

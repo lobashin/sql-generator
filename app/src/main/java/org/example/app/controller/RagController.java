@@ -53,14 +53,6 @@ public class RagController {
         return ragService.selectData(request.getMessage());
     }
 
-    @Operation(
-            description = "Список тулов на mcp-сервере"
-    )
-    @GetMapping("/ai/tools")
-    public String tools() {
-        return syncClientList.stream().map(mcpSyncClient -> mcpSyncClient.listTools().toString())
-                .collect(Collectors.joining("\n\n---\n\n"));
-    }
 
     @Operation(
             description = "Загружает структуру датамарта в векторное хранилище"
@@ -79,24 +71,6 @@ public class RagController {
         } catch (Exception e) {
             log.error("Ошибка инициализации датамарта", e);
             return "ERROR: " + e.getMessage();
-        }
-    }
-
-    @Operation(
-            description = "Загружает структуру датамарта в векторное хранилище"
-    )
-    @GetMapping("/ai/rag/initialServices")
-    public void initServices() {
-        try {
-            VectorStoreInitializer structureInitializer = vectorStoreInitializerFactory.createInitializer(
-                    suitableServicesFile,
-                    "service_structure_category",
-                    "service_structure_type"
-            );
-            structureInitializer.initializeFromFile();
-            log.info("Инициализация предложенных сервисов завершена успешно");
-        } catch (Exception e) {
-            log.error("Ошибка инициализации предложенных сервисов", e);
         }
     }
 }

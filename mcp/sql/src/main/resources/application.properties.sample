@@ -1,9 +1,0 @@
-# Spring Boot application configuration
-spring.application.name=sql-generator
-
-# Server configuration
-server.port=8080
-
-# Logging configuration
-logging.level.org.springframework=INFO
-logging.level.org.example.mcp.generator.sql=DEBUG
