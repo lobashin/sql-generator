@@ -28,7 +28,7 @@ public class VectorStoreInitializerFactory {
             String initializerType) {
 
         return new FileBasedVectorStoreInitializer(
-                file, category, initializerType, vectorStore
+                file, category, initializerType, mcpClient
         );
     }
 }

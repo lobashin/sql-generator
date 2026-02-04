@@ -1,24 +1,17 @@
 package org.example.app.service.impl;
 
-import io.modelcontextprotocol.client.McpSyncClient;
-import io.modelcontextprotocol.spec.McpSchema;
 import org.example.app.service.McpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.model.ModelOptionsUtils;
-import org.springframework.ai.tool.ToolCallback;
+import org.springframework.ai.document.Document;
 import org.springframework.ai.tool.ToolCallbackProvider;
-import org.springframework.http.*;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class McpClientImpl implements McpClient {
@@ -27,14 +20,13 @@ public class McpClientImpl implements McpClient {
 
     private final ChatClient chatClient;
     private final ToolCallbackProvider tools;
-    private final List<McpSyncClient> mcpSyncClients;
+    private final VectorStore vectorStore;
 
     public McpClientImpl(ChatClient chatClient,
-                         ToolCallbackProvider tools,
-                         List<McpSyncClient> mcpSyncClients) {
+                         ToolCallbackProvider tools, VectorStore vectorStore) {
         this.chatClient = chatClient;
         this.tools = tools;
-        this.mcpSyncClients = mcpSyncClients;
+        this.vectorStore = vectorStore;
     }
 
     @Override
@@ -43,14 +35,11 @@ public class McpClientImpl implements McpClient {
         return chatClient
                 .prompt()
                 .system("""
-                        Ты - SQL консультант, который отвечает только SQL-запросом
-
-                        1. Анализируй описание структуры базы данных
-                        2. Сначала используй тул [Получить описание структуры базы данных] для получения данных о базе, затем примени [Описание конктертной таблицы] для получения данных о таблице"
-                        3. Используй правильные имена таблиц и полей из описания структуры базы данных
-                        4. Используй правильные имена столбцов из описание конктертной таблицы
+                        Ты - консультант, который генериркет SQL по запросу пользователя.
+                        Сначала используй тул [Схема базы данных] для получения описания базы данных.
+                        Затем примени тул [Структура таблицы] для получения данных о полях таблице.
                         """)
-                .user("Сгенерируй SQL запрос для: " + message)
+                .user("Отвечай без префиксов типа \"sql\" перед ответом. Просто давай прямой ответ: "+ message)
                 .toolCallbacks(tools.getToolCallbacks()
 
                         )
@@ -59,20 +48,30 @@ public class McpClientImpl implements McpClient {
                 .content();
     }
 
-    public String addDocumentsToKnowledgeBase(List<Map<String, Object>> documents) {
+    public void addDocumentsToKnowledgeBase(List<Map<String, Object>> documents) {
         log.info("Adding {} documents to knowledge base", documents.size());
 
-        try {
-            var response = mcpSyncClients
-                    .getFirst()
-                    .callTool(McpSchema.CallToolRequest.builder()
-                            .name("add_to_knowledge_base")
-                            .arguments(Map.of("documents", ModelOptionsUtils.toJsonString(documents)))
-                            .build());
-            return response.content().stream().map(Object::toString).collect(Collectors.joining("\n---\n"));
-        } catch (Exception e) {
-            log.error("Error adding documents to knowledge base", e);
-            return "Error adding documents: " + e.getMessage();
-        }
+            List<Document> aiDocuments = new ArrayList<>();
+
+            for (Map<String, Object> doc : documents) {
+                String content = (String) doc.get("content");
+                @SuppressWarnings("unchecked")
+                Map<String, Object> metadata = (Map<String, Object>) doc.get("metadata");
+
+                if (content == null || content.trim().isEmpty()) {
+                    continue;
+                }
+
+                Document aiDocument =
+                        new Document(content, metadata);
+                aiDocuments.add(aiDocument);
+            }
+
+            if (!aiDocuments.isEmpty()) {
+                vectorStore.add(aiDocuments);
+                log.info(String.format("Успешно добавлено %d документов в базу знаний", aiDocuments.size()));
+            } else {
+                log.error("Error: No valid documents to add");
+            }
     }
 }

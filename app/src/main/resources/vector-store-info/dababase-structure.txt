@@ -1,21 +1,19 @@
 --- METADATA ---
-title: Структура базы
 --- CONTENT ---
-СХЕМА: datamart
-НАЗНАЧЕНИЕ: Хранение данных о сотрудниках и их семьях
-ТАБЛИЦЫ: employee, children, documents
+Схема datamart базы данных
+Схема datamart содержит только 3 таблицы, это: datamart.employee, datamart.children, datamart.documents
 
 --- METADATA ---
-title: Таблица сотрудников
 --- CONTENT ---
-НАИМЕНОВАНИЕ: datamart.employee
+Структура таблицы datamart.employee
+Таблица datamart.employee содержит только 5 полей, это: employee.id, employee.name, employee.email, employee.department, employee.created_at
 
 --- METADATA ---
-title: Таблица детей
 --- CONTENT ---
-НАИМЕНОВАНИЕ: datamart.children
+Структура таблицы datamart.children
+Таблица datamart.children содержит только 5 полей, это: children.id, children.employee_id, children.name, children.age, children.birth_date
 
 --- METADATA ---
-title: Таблица документов
 --- CONTENT ---
-НАИМЕНОВАНИЕ: datamart.documents
+Структура таблицы datamart.documents
+Таблица datamart.documents содержит только 8 полей, это: documents.id, documents.employee_id, documents.child_id, documents.document_type, documents.document_number, documents.issue_date, documents.expiration_date, documents.file_path

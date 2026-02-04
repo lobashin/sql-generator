@@ -14,11 +14,4 @@ public class McpConfig {
                 "vector-store-info/dababase-structure.txt"
         );
     }
-
-    @Bean("suitableServicesFile")
-    public Resource suitableServicesFile() {
-        return new ClassPathResource(
-                "vector-store-info/garanted-sql.txt"
-        );
-    }
 }

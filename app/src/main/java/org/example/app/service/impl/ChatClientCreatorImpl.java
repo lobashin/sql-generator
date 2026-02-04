@@ -5,7 +5,6 @@ import chat.giga.springai.api.chat.GigaChatApi;
 import org.example.app.service.ChatClientCreator;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
-import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.app.model.DocumentInfo;
 import org.example.app.service.McpClient;
 import org.example.app.service.VectorStoreInitializer;
-import org.springframework.ai.document.Document;
-import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 
@@ -20,7 +18,7 @@ import java.util.Map;
 @Slf4j
 public class FileBasedVectorStoreInitializer implements VectorStoreInitializer {
 
-    private final VectorStore vectorStore;
+    private final McpClient mcpClient;
     private final Resource file;
     private final String category;
     private final String initializerType;
@@ -29,8 +27,8 @@ public class FileBasedVectorStoreInitializer implements VectorStoreInitializer {
             Resource file,
             String category,
             String initializerType,
-            VectorStore vectorStore) {
-        this.vectorStore = vectorStore;
+            McpClient mcpClient) {
+        this.mcpClient = mcpClient;
         this.file = file;
         this.category = category;
         this.initializerType = initializerType;
@@ -57,28 +55,7 @@ public class FileBasedVectorStoreInitializer implements VectorStoreInitializer {
             List<Map<String, Object>> documentsToSend = prepareDocumentsForSending(documents);
 
             // Отправляем все документы одним пакетом
-            List<Document> aiDocuments = new ArrayList<>();
-
-            for (Map<String, Object> doc : documentsToSend) {
-                String content = (String) doc.get("content");
-                @SuppressWarnings("unchecked")
-                Map<String, Object> metadata = (Map<String, Object>) doc.get("metadata");
-
-                if (content == null || content.trim().isEmpty()) {
-                    continue;
-                }
-
-                Document aiDocument =
-                        new Document(content, metadata);
-                aiDocuments.add(aiDocument);
-            }
-
-            if (!aiDocuments.isEmpty()) {
-                vectorStore.add(aiDocuments);
-                log.info(String.format("Успешно добавлено %d документов в базу знаний", aiDocuments.size()));
-            } else {
-                log.error("Error: No valid documents to add");
-            }
+            mcpClient.addDocumentsToKnowledgeBase(documentsToSend);
 
 
         } catch (Exception e) {

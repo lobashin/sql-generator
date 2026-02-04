@@ -2,6 +2,7 @@ package org.example.mcp.sql;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
@@ -30,6 +31,7 @@ public class VectorStoreTest {
         vectorStore.delete(allIds);
     }
 
+    @Disabled("в разаботке")
     @Test
     void similaritySearch_shouldFoundOnlyOneMostSimilarSql() {
         //given

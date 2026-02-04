@@ -9,32 +9,30 @@ import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class SqlGeneratorTool {
+public class DatabaseMcpTools {
 
-    public static final Logger log = LoggerFactory.getLogger(SqlGeneratorTool.class);
+    public static final Logger log = LoggerFactory.getLogger(DatabaseMcpTools.class);
 
     private final VectorStore vectorStore;
 
-    public SqlGeneratorTool(VectorStore vectorStore) {
+    public DatabaseMcpTools(VectorStore vectorStore) {
         this.vectorStore = vectorStore;
     }
 
     @McpTool(
             name = "structure_database",
-            description = "Получить описание структуры базы данных"
+            description = "Схема базы данных"
     )
     public String structureDatabase(@McpToolParam(description = "Поисковый запрос") String question) {
         List<Document> relevantDocs = vectorStore.similaritySearch(
                 SearchRequest.builder()
                         .query(question)
                         .topK(1)
-                        .similarityThreshold(0.65)
+                        .similarityThreshold(0.80)
                         .build()
         );
 
@@ -43,7 +41,7 @@ public class SqlGeneratorTool {
                 .map(Document::getText)
                 .collect(Collectors.joining("\n\n---\n\n"));
 
-        log.info(">> Получить описание структуры базы данных: {}", question);
+        log.info(">> Описание конктретной схемы базы данных: {}", question);
         log.info(">> Найдено {} релевантных документов", relevantDocs.size());
         log.info(">> Контекст: {}", context);
 
@@ -52,7 +50,7 @@ public class SqlGeneratorTool {
 
     @McpTool(
             name = "table_database",
-            description = "Описание конктертной таблицы"
+            description = "Структура таблицы"
     )
     public String tableDatabase(
             @McpToolParam(description = "Поисковый запрос") String question) {
@@ -61,7 +59,7 @@ public class SqlGeneratorTool {
                 SearchRequest.builder()
                         .query(question)
                         .topK(1)
-                        .similarityThreshold(0.65)
+                        .similarityThreshold(0.85)
                         .build()
         );
 

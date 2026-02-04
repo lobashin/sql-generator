@@ -19,6 +19,7 @@ public class RagServiceImpl implements RagService {
     @Override
     public String selectData(String message) {
         String sql = mcpClient.requestResolveSql(message);
-        return dataSelectorRepository.findDataFromRepository(sql);
+        String data = dataSelectorRepository.findDataFromRepository(sql);
+        return String.format("получены данные:\n%s\n\nпо сгенерированному sql:\n%s", data, sql);
     }
 }

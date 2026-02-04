@@ -1,9 +1,0 @@
---- METADATA ---
-title: "Данный sql-запрос выполняет выборку детей по идентификатору одного сотрудника, дети хранятся в таблице datamart.children, сотрудники хранятся в таблице datamart.employee"
-
---- CONTENT ---
-SELECT employes.name FROM datamart.employee AS employes
-LEFT JOIN datamart.children AS childrens
-ON employes.id = childrens.employee_id
-WHERE employes.id = ?
-ORDER BY employes.id ASC
