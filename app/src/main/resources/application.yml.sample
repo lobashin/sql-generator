@@ -1,3 +1,17 @@
+logging:
+  level:
+    root: INFO
+    org:
+      springframework:
+        ai:
+          chat:
+            client: DEBUG
+#    io:
+#      modelcontextprotocol:
+#        client: DEBUG
+#        spec: DEBUG
+#        server: DEBUG
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -6,7 +20,7 @@ springdoc:
     path: /api-docs
 
 server:
-  port: 8081
+  port: 8080
 
 spring:
   datasource:
@@ -14,7 +28,25 @@ spring:
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
-    hikari:
-      connection-timeout: 20000
-      maximum-pool-size: 10
-      minimum-idle: 5
+  ai:
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+    gigachat:
+      auth:
+        bearer:
+          api-key: ${GIGACHAT_API_KEY}
+        scope: GIGACHAT_API_PERS
+        unsafe-ssl: true
+    mcp:
+      client:
+        enabled: true
+        name: my-mcp-client
+        version: 1.0.0
+        request-timeout: 600s
+        type: SYNC
+        streamable-http:
+          connections:
+            server1:
+              url: http://localhost:20000
+              endpoint: /mcp

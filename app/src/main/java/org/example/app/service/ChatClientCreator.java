@@ -1,4 +1,4 @@
-package org.example.mcp.sql.service;
+package org.example.app.service;
 
 import org.springframework.ai.chat.client.ChatClient;
 

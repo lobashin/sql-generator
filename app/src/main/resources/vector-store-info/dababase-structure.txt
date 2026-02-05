@@ -1,0 +1,19 @@
+--- METADATA ---
+--- CONTENT ---
+Схема datamart базы данных
+Схема datamart содержит только 3 таблицы, это: datamart.employee, datamart.children, datamart.documents
+
+--- METADATA ---
+--- CONTENT ---
+Структура таблицы datamart.employee
+Таблица datamart.employee содержит только 5 полей, это: employee.id, employee.name, employee.email, employee.department, employee.created_at
+
+--- METADATA ---
+--- CONTENT ---
+Структура таблицы datamart.children
+Таблица datamart.children содержит только 5 полей, это: children.id, children.employee_id, children.name, children.age, children.birth_date
+
+--- METADATA ---
+--- CONTENT ---
+Структура таблицы datamart.documents
+Таблица datamart.documents содержит только 8 полей, это: documents.id, documents.employee_id, documents.child_id, documents.document_type, documents.document_number, documents.issue_date, documents.expiration_date, documents.file_path
