@@ -1,3 +1,15 @@
+server:
+  port: 20000
+
+logging:
+  level:
+    root: INFO
+#    io:
+#      modelcontextprotocol:
+#        client: DEBUG
+#        spec: DEBUG
+#        server: DEBUG
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
@@ -6,6 +18,20 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   ai:
+    mcp:
+      server:
+        name: sql-mcp-server
+        protocol: streamable
+        version: 1.0.0
+        type: SYNC
+        instructions: "This server provides sql information"
+        capabilities:
+          tool: true
+          resource: false
+          prompt: false
+          completion: false
+        streamable-http:
+          mcp-endpoint: /mcp
     vectorstore:
       pgvector:
         initialize-schema: true

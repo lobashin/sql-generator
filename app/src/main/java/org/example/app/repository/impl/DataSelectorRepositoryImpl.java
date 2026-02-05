@@ -31,7 +31,8 @@ public class DataSelectorRepositoryImpl implements DataSelectorRepository {
                 throw new UnsupportedSqlCommandException("Неподдерживаемая SQL операция");
             }
         } catch (Exception e) {
-            throw new RuntimeException("Ошибка выполнения SQL запроса: " + e.getMessage(), e);
+            log.warn("Ошибка выполнения SQL запроса: " + e.getMessage(), e);
+            return e.getMessage();
         }
     }
 

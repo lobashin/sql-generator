@@ -1,4 +1,4 @@
-package org.example.app.service.vectorstore.initialaizer;
+package org.example.app.service;
 
 public interface VectorStoreInitializer {
 

@@ -1,4 +1,4 @@
-package org.example.app.service.rag;
+package org.example.app.service;
 
 public interface RagService {
 

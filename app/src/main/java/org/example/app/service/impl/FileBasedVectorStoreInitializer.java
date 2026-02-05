@@ -1,9 +1,9 @@
-package org.example.app.service.vectorstore.initialaizer.impl;
+package org.example.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.app.model.DocumentInfo;
-import org.example.app.restclient.McpClient;
-import org.example.app.service.vectorstore.initialaizer.VectorStoreInitializer;
+import org.example.app.service.McpClient;
+import org.example.app.service.VectorStoreInitializer;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 
@@ -24,10 +24,10 @@ public class FileBasedVectorStoreInitializer implements VectorStoreInitializer {
     private final String initializerType;
 
     public FileBasedVectorStoreInitializer(
-            McpClient mcpClient,
             Resource file,
             String category,
-            String initializerType) {
+            String initializerType,
+            McpClient mcpClient) {
         this.mcpClient = mcpClient;
         this.file = file;
         this.category = category;
@@ -45,9 +45,8 @@ public class FileBasedVectorStoreInitializer implements VectorStoreInitializer {
                 return;
             }
 
-            String content = readFileContent(file);
             List<DocumentInfo> documents =
-                    parseDocumentInfos(content, file.getFilename());
+                    parseDocumentInfos(readFileContent(file), file.getFilename());
 
             log.info("[{}] Найдено {} документов для добавления",
                     initializerType, documents.size());
@@ -57,6 +56,8 @@ public class FileBasedVectorStoreInitializer implements VectorStoreInitializer {
 
             // Отправляем все документы одним пакетом
             mcpClient.addDocumentsToKnowledgeBase(documentsToSend);
+
+
         } catch (Exception e) {
             log.error("Критическая ошибка инициализации {}: {}",
                     initializerType, e.getMessage(), e);

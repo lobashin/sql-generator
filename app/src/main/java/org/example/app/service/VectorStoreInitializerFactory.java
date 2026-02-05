@@ -1,9 +1,8 @@
-package org.example.app.service.vectorstore;
+package org.example.app.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.app.restclient.McpClient;
-import org.example.app.service.vectorstore.initialaizer.VectorStoreInitializer;
-import org.example.app.service.vectorstore.initialaizer.impl.FileBasedVectorStoreInitializer;
+import org.example.app.service.impl.FileBasedVectorStoreInitializer;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +12,11 @@ public class VectorStoreInitializerFactory {
 
     private final McpClient mcpClient;
 
-    public VectorStoreInitializerFactory(McpClient mcpClient) {
+    private final VectorStore vectorStore;
+
+    public VectorStoreInitializerFactory(McpClient mcpClient, VectorStore vectorStore) {
         this.mcpClient = mcpClient;
+        this.vectorStore = vectorStore;
     }
 
     /**
@@ -26,7 +28,7 @@ public class VectorStoreInitializerFactory {
             String initializerType) {
 
         return new FileBasedVectorStoreInitializer(
-                mcpClient, file, category, initializerType
+                file, category, initializerType, mcpClient
         );
     }
 }

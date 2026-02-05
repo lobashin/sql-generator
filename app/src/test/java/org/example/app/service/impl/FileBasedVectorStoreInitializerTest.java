@@ -1,6 +1,6 @@
-package org.example.app.service.vectorstore.initialaizer.impl;
+package org.example.app.service.impl;
 
-import org.example.app.restclient.McpClient;
+import org.example.app.service.McpClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,6 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 
@@ -23,6 +24,9 @@ class FileBasedVectorStoreInitializerTest {
 
     @Mock
     private McpClient mcpClient;
+
+    @Mock
+    private VectorStore vectorStore;
 
     @Captor
     private ArgumentCaptor<List<Map<String, Object>>> documentsCaptor;
@@ -46,7 +50,7 @@ class FileBasedVectorStoreInitializerTest {
         when(nonExistentResource.getFilename()).thenReturn("non-existent.txt");
 
         initializer = new FileBasedVectorStoreInitializer(
-                mcpClient, nonExistentResource, category, initializerType);
+                nonExistentResource, category, initializerType, mcpClient);
 
         // Act
         initializer.initializeFromFile();
@@ -74,7 +78,7 @@ class FileBasedVectorStoreInitializerTest {
 
         testResource = new ByteArrayResource(content.getBytes(), "test.txt");
         initializer = new FileBasedVectorStoreInitializer(
-                mcpClient, testResource, category, initializerType);
+                testResource, category, initializerType, mcpClient);
 
         // Act
         initializer.initializeFromFile();
@@ -112,7 +116,7 @@ class FileBasedVectorStoreInitializerTest {
         String content = "";
         testResource = new ByteArrayResource(content.getBytes(), "empty.txt");
         initializer = new FileBasedVectorStoreInitializer(
-                mcpClient, testResource, category, initializerType);
+                testResource, category, initializerType, mcpClient);
 
         // Act
         initializer.initializeFromFile();
@@ -129,7 +133,7 @@ class FileBasedVectorStoreInitializerTest {
         String content = "Just some content without metadata markers.";
         testResource = new ByteArrayResource(content.getBytes(), "content-only.txt");
         initializer = new FileBasedVectorStoreInitializer(
-                mcpClient, testResource, category, initializerType);
+                testResource, category, initializerType, mcpClient);
 
         // Act
         initializer.initializeFromFile();
@@ -157,7 +161,7 @@ class FileBasedVectorStoreInitializerTest {
 
         testResource = new ByteArrayResource(content.getBytes(), "metadata-only.txt");
         initializer = new FileBasedVectorStoreInitializer(
-                mcpClient, testResource, category, initializerType);
+                testResource, category, initializerType, mcpClient);
 
         // Act
         initializer.initializeFromFile();
@@ -188,7 +192,7 @@ class FileBasedVectorStoreInitializerTest {
 
         testResource = new ByteArrayResource(content.getBytes(), "typed-metadata.txt");
         initializer = new FileBasedVectorStoreInitializer(
-                mcpClient, testResource, category, initializerType);
+                testResource, category, initializerType, mcpClient);
 
         // Act
         initializer.initializeFromFile();
@@ -211,7 +215,7 @@ class FileBasedVectorStoreInitializerTest {
         String content = "Test content";
         testResource = new ByteArrayResource(content.getBytes(), "error.txt");
         initializer = new FileBasedVectorStoreInitializer(
-                mcpClient, testResource, category, initializerType);
+                testResource, category, initializerType, mcpClient);
 
         doThrow(new RuntimeException("MCP Client error"))
                 .when(mcpClient).addDocumentsToKnowledgeBase(anyList());
@@ -247,7 +251,7 @@ class FileBasedVectorStoreInitializerTest {
 
         testResource = new ByteArrayResource(content.getBytes(), "ordered.txt");
         initializer = new FileBasedVectorStoreInitializer(
-                mcpClient, testResource, category, initializerType);
+                testResource, category, initializerType, mcpClient);
 
         // Act
         initializer.initializeFromFile();
@@ -289,7 +293,7 @@ class FileBasedVectorStoreInitializerTest {
 
         testResource = new ByteArrayResource(content.getBytes(), "malformed.txt");
         initializer = new FileBasedVectorStoreInitializer(
-                mcpClient, testResource, category, initializerType);
+                 testResource, category, initializerType, mcpClient);
 
         // Act
         initializer.initializeFromFile();
