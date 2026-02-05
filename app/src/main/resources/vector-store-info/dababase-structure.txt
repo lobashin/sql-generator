@@ -1,6 +1,6 @@
 --- METADATA ---
 --- CONTENT ---
-Схема datamart базы данных
+Схема базы данных datamart
 Схема datamart содержит только 3 таблицы, это: datamart.employee, datamart.children, datamart.documents
 
 --- METADATA ---
