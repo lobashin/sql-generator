@@ -16,14 +16,14 @@ import java.util.Map;
 @Service
 public class McpClientImpl implements McpClient {
 
-    public static final Logger log = LoggerFactory.getLogger(McpClientImpl.class);
-
+    private static final Logger log = LoggerFactory.getLogger(McpClientImpl.class);
     private final ChatClient chatClient;
     private final ToolCallbackProvider tools;
     private final VectorStore vectorStore;
 
     public McpClientImpl(ChatClient chatClient,
-                         ToolCallbackProvider tools, VectorStore vectorStore) {
+                         ToolCallbackProvider tools,
+                         VectorStore vectorStore) {
         this.chatClient = chatClient;
         this.tools = tools;
         this.vectorStore = vectorStore;
@@ -31,19 +31,16 @@ public class McpClientImpl implements McpClient {
 
     @Override
     public String requestResolveSql(String message) {
-
         return chatClient
                 .prompt()
                 .system("""
                         Ты - консультант, который генерирует SQL.
-                        Твой ответ будет использоваться для запроса на прямую из базы данных, поэтому отвечай .
                         Сначала используй тул [Схема базы данных] для получения описания базы данных.
                         Затем примени тул [Структура таблицы] для получения данных о полях таблице.
+                        Твой ответ будет использоваться для запроса на прямую из базы данных, поэтому отвечай ТОЛЬКО SQL-запросом, без пояснений, без форматирования и без обратных кавычек..
                         """)
                 .user("Сгенерируй SQL запрос для: " + message + "\n\nВерни ТОЛЬКО SQL запрос без дополнительного текста.")
-                .toolCallbacks(tools.getToolCallbacks()
-
-                        )
+                .toolCallbacks(tools.getToolCallbacks())
                 .toolNames()
                 .call()
                 .content();
